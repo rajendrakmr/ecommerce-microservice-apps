@@ -1,0 +1,72 @@
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - ecommerce-nt
+
+  auth-service:
+    container_name: auth-service
+    build:
+      context: ./backend/auth-service 
+      dockerfile: Dockerfile-slim
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5001:5001
+    depends_on:
+      - mongodb
+  user-service:
+    container_name: user-service
+    build:
+      context: ./backend/user-service 
+      dockerfile: Dockerfile-slim
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5002:5002
+    depends_on:
+       - mongodb
+  product-service:
+    container_name: product-service
+    build:
+      context: ./backend/product-service 
+      dockerfile: Dockerfile-slim
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5003:5003
+    depends_on:
+      - mongodb
+
+  api-gateway:
+    container_name: api-gateway
+    build:
+      context: ./backend/api-gateway 
+      dockerfile: Dockerfile-slim
+    environment:
+        AUTH_SERVICE_URL: http://auth-service:5001/auth
+        USER_SERVICE_URL: http://user-service:5002/
+        PRODUCT_SERVICE_URL: http://product-service:5003/
+        PORT: 5000
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5000:5000
+    depends_on:
+      - mongodb
+      - product-service
+      - user-service
+      - auth-service
+networks:
+  ecommerce-nt:
+    driver: bridge
+volumes:
+  mongo-data:

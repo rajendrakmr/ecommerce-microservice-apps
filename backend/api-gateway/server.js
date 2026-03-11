@@ -1,14 +1,14 @@
 const express = require("express")
 const axios = require("axios")
 const cors = require("cors")
-
+require("dotenv").config()
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
 /** Auth service url end point */
-const authService = axios.create({ baseURL: "http://localhost:5001/auth" })
+const authService = axios.create({ baseURL: process.env.AUTH_SERVICE_URL })
 app.post("/auth/register", async (req, res) => {
     try {
         const response = await authService.post("/register", req.body)
@@ -30,7 +30,7 @@ app.post("/auth/login", async (req, res) => {
 
 
 /** User service url end point */
-const userService = axios.create({ baseURL: "http://localhost:5002/" })
+const userService = axios.create({ baseURL: process.env.USER_SERVICE_URL })
 app.get("/users", async (req, res) => {
     try {
         const response = await userService.get("/users", req.body)
@@ -46,7 +46,7 @@ app.get("/users", async (req, res) => {
 
 
 /** User Products url end point */
-const userProducts = axios.create({ baseURL: "http://localhost:5003/" })
+const userProducts = axios.create({ baseURL: process.env.PRODUCT_SERVICE_URL })
 app.get("/products", async (req, res) => {
     try {
         const response = await userProducts.get("/products", req.body)
@@ -70,12 +70,12 @@ app.post("/products", async (req, res) => {
 
 
 
- 
+
 // BASE ENDPOINT
 app.get("/", (req, res) => {
     res.json({ message: "API Gateway Running" })
 })
 
-app.listen(5000, () => {
-    console.log("API Gateway running on port 5000")
+app.listen(process.env.PORT, () => {
+    console.log(`API Gateway running on port ${process.env.PORT}`)
 })
