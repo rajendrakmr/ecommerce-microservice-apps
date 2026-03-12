@@ -18,14 +18,19 @@ jobs:
               with:
                 node-version: '24' 
 
-            - name: debug path
-              run: echo  ${{ inputs.service-path }}
-               
+            - name: Cache node_modules for service
+              uses: actions/cache@v3
+              with:
+                path: ${{ github.workspace }}/${{ inputs.service-path }}/node_modules
+                key: ${{ runner.os }}-node-${{ hashFiles('${{ github.workspace }}/${{ inputs.service-path }}/package-lock.json') }}
+                restore-keys: |
+                    ${{ runner.os }}-node-  
 
-            # - name: Install dependecy
-            #   run: npm ci
-            #   working-directory: ${{ inputs.service-path }}
+             
+            - name: Install dependecy
+              run: npm ci
+              working-directory: ${{ github.workspace }}/${{ inputs.service-path }}
 
-            # - name: Run ESLint
-            #   run: npx eslint . --ext .js,.jsx,.ts,.tsx
-            #   working-directory: ${{ inputs.service-path }} 
+            - name: Run ESLint
+              run: npx eslint . --ext .js,.jsx,.ts,.tsx
+              working-directory: ${{ github.workspace }}/${{ inputs.service-path }} 
