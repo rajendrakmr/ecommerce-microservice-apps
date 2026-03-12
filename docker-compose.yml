@@ -14,9 +14,13 @@ services:
 
   auth-service:
     container_name: auth-service
+    environment: 
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
+      PORT: 5001
     build:
       context: ./backend/auth-service 
       dockerfile: Dockerfile-slim
+    
     networks:
       - ecommerce-nt
     ports:
@@ -25,6 +29,9 @@ services:
       - mongodb
   user-service:
     container_name: user-service
+    environment: 
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
+      PORT: 5002
     build:
       context: ./backend/user-service 
       dockerfile: Dockerfile-slim
@@ -36,6 +43,9 @@ services:
        - mongodb
   product-service:
     container_name: product-service
+    environment: 
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
+      PORT: 5003
     build:
       context: ./backend/product-service 
       dockerfile: Dockerfile-slim
@@ -43,6 +53,31 @@ services:
       - ecommerce-nt
     ports:
       - 5003:5003
+    depends_on:
+      - mongodb
+  cart-service:
+    container_name: cart-service
+    build:
+      context: ./backend/cart-service 
+      dockerfile: Dockerfile-slim
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5004:5004
+    depends_on:
+      - mongodb
+  order-service:
+    container_name: order-service
+    environment: 
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
+      PORT: 5005
+    build:
+      context: ./backend/order-service 
+      dockerfile: Dockerfile-slim
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5005:5005
     depends_on:
       - mongodb
 
@@ -55,6 +90,8 @@ services:
         AUTH_SERVICE_URL: http://auth-service:5001/auth
         USER_SERVICE_URL: http://user-service:5002/
         PRODUCT_SERVICE_URL: http://product-service:5003/
+        CART_SERVICE_URL: http://cart-service:5004/
+        ORDER_SERVICE_URL: http://order-service:5005/
         PORT: 5000
     networks:
       - ecommerce-nt
@@ -65,6 +102,8 @@ services:
       - product-service
       - user-service
       - auth-service
+      - order-service
+      - cart-service
 networks:
   ecommerce-nt:
     driver: bridge
