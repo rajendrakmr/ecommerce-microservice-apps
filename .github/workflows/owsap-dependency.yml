@@ -15,6 +15,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Extract service name
+        id: meta
+        run: |
+          SERVICE=$(basename "${{ inputs.service-path }}")
+          echo "SERVICE_NAME=$SERVICE" >> $GITHUB_OUTPUT
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -23,13 +29,13 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: ${{ inputs.service-path }}
 
       - name: OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         with:
-          project: ${{ inputs.service-path }}
+          project: ${{ steps.meta.outputs.SERVICE_NAME }}
           path: ${{ inputs.service-path }}
           format: HTML
           out: reports
@@ -37,5 +43,5 @@ jobs:
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-check-${{ inputs.service-path }}
+          name: dependency-check-${{ steps.meta.outputs.SERVICE_NAME }}
           path: reports
