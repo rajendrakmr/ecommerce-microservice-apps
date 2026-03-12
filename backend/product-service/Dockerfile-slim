@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:24.14.0-alpine3.20 AS builder
+FROM node:24.14.0-alpine3.23 AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN npm ci --omit=dev
 COPY . .
 
 # Stage 2: Runtime
-FROM gcr.io/distroless/nodejs24-debian12
+FROM gcr.io/distroless/nodejs24-debian13:nonroot
 
 WORKDIR /app
 
