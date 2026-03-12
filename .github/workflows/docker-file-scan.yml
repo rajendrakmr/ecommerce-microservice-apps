@@ -17,4 +17,4 @@ jobs:
             - name: Dockerfile validate
               uses: hadolint/hadolint-action@v3.1.0
               with:
-                  dockerfile: ${{ github.workspace }}/${{ inputs.service-path }}/Dockerfile-slim 
+                  dockerfile: ${{ inputs.service-path }}/Dockerfile-slim 
