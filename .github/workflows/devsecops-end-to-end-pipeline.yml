@@ -39,7 +39,7 @@ jobs:
       
   docker-build-and-push:
       uses: ./.github/workflows/docker-and-push.yml
-      needs: [docker-file-scan, check-code-lint]
+      needs: [docker-file-scan, dependency-review, check-code-lint]
       strategy:
         matrix:
           service-path:
