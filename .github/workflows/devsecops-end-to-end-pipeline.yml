@@ -4,6 +4,7 @@ on:
         branches: [dev]
     
 jobs:
+    
     check-code:
         uses: ./.github/workflows/check-code-linter.yml
 
@@ -14,11 +15,11 @@ jobs:
         uses: ./.github/workflows/code-quality.yml
     
     docker-file:
-        uses: ./.github/workflows/docker-file.yml
+        uses: ./.github/workflows/docker-file-scan.yml
 
     secrets:
         uses: ./.github/workflows/secrets.yml   
     
-    build-and-push:
-        uses: ./.github/workflows/build-and-push.yml
+    # build-and-push:
+    #     uses: ./.github/workflows/build-and-push.yml
             
