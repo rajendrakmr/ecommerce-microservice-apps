@@ -17,8 +17,22 @@ jobs:
           - backend/api-gateway
         #   - frontend/client-app
     with:
-      service-path: ${{ matrix.service-path }}
-    secrets: inherit 
+      service-path: ${{ matrix.service-path }} 
+
+  owasp-dependency-scan:
+    uses: ./.github/workflows/owsap-dependency.yml
+    strategy:
+      matrix:
+        service-path:
+          - backend/auth-service
+          - backend/user-service
+          - backend/product-service
+          - backend/cart-service
+          - backend/order-service
+          - backend/api-gateway
+        #   - frontend/client-app
+    with:
+      service-path: ${{ matrix.service-path }} 
   
   dependency-review:
     uses: ./.github/workflows/code-dependency.yml 
@@ -39,7 +53,7 @@ jobs:
       
   docker-build-and-push:
       uses: ./.github/workflows/docker-and-push.yml
-      needs: [docker-file-scan, dependency-review, check-code-lint]
+      needs: [docker-file-scan,owasp-dependency-scan, dependency-review, check-code-lint]
       strategy:
         matrix:
           service-path:
@@ -56,7 +70,7 @@ jobs:
       
   trivy-image-scan:
       uses: ./.github/workflows/trivy-scan.yml
-      needs: [docker-build-and-push]
+      needs: [docker-build-and-push,owasp-dependency-scan]
       strategy:
         matrix:
           service-path:
