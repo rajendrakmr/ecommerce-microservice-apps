@@ -9,12 +9,12 @@ jobs:
     strategy:
       matrix:
         service-path:
-          - backend/auth-service
+          # - backend/auth-service
           # - backend/user-service
           # - backend/product-service
           # - backend/cart-service
           # - backend/order-service
-          # - backend/api-gateway
+          - backend/api-gateway
         #   - frontend/client-app
     with:
       service-path: ${{ matrix.service-path }}
