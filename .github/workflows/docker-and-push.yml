@@ -34,7 +34,7 @@ jobs:
             - name: Build and push Docker image
               uses: docker/build-push-action@v6
               with:
-                directory: ${{ github.workspace }}/${{ inputs.service-path }}
+                context: ${{ github.workspace }}/${{ inputs.service-path }}
                 push: true
                 tags: | 
                     ${{ vars.DOCKER_HUB_USERNAME }}/${{ steps.meta.outputs.SERVICE_NAME}}:latest
