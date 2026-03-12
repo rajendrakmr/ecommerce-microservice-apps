@@ -19,6 +19,9 @@ jobs:
     with:
       service-path: ${{ matrix.service-path }}
     secrets: inherit 
+  
+  dependency-review:
+    uses: ./.github/workflows/code-dependency.yml 
 
   docker-file-scan:
       uses: ./.github/workflows/docker-file-scan.yml
