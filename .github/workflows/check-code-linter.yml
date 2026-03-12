@@ -28,7 +28,7 @@ jobs:
 
              
             - name: Install dependecy
-              run: npm ci
+              run: npm install
               working-directory: ${{ github.workspace }}/${{ inputs.service-path }}
 
             - name: Run ESLint
