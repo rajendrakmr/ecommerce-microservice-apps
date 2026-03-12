@@ -8,9 +8,6 @@ const connectDB = async () => {
     })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.error('MongoDB connection error:', err));
-
-//  await mongoose.connect("mongodb+srv://rajen:Ckjdz6k9ylnU85Bc@cluster0.qnsjbe8.mongodb.net/?appName=Cluster0")
- console.log("Auth DB Connected")
 }
 
 module.exports = connectDB
