@@ -19,6 +19,10 @@ jobs:
                 node-version: 20
                 cache: 'npm'
 
+            - name: debug path
+              run: echo  ${{ inputs.service-path }}
+               
+
             - name: Install dependecy
               run: npm ci
               working-directory: ${{ inputs.service-path }}
