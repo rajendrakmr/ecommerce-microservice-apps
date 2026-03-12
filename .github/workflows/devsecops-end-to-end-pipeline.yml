@@ -18,15 +18,8 @@ jobs:
         #   - frontend/client-app
     with:
       service-path: ${{ matrix.service-path }}
-    secrets: inherit
- 
+    secrets: inherit 
 
-  # code-dependency:
-  #     uses: ./.github/workflows/code-dependency.yml
-    
-  # code-quality:
-  #     uses: ./.github/workflows/code-quality.yml
-  
   docker-file:
       uses: ./.github/workflows/docker-file-scan.yml
       strategy:
@@ -37,14 +30,24 @@ jobs:
             - backend/product-service
             - backend/cart-service
             - backend/order-service
-            - backend/api-gateway
-          #   - frontend/client-app
+            - backend/api-gateway 
       with:
         service-path: ${{ matrix.service-path }}
-
-  # secrets:
-  #     uses: ./.github/workflows/secrets.yml   
-  
-  # build-and-push:
-  #     uses: ./.github/workflows/build-and-push.yml
-          
+      
+  docker:
+      uses: ./.github/workflows/docker-and-push.yml
+      needs: [docker-file, check-code]
+      strategy:
+        matrix:
+          service-path:
+            - backend/auth-service
+            - backend/user-service
+            - backend/product-service
+            - backend/cart-service
+            - backend/order-service
+            - backend/api-gateway 
+      with:
+        service-path: ${{ matrix.service-path }}
+      secrets:
+        inherit
+     
