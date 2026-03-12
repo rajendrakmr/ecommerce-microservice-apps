@@ -17,7 +17,8 @@ jobs:
               uses: actions/setup-node@v4
               with:
                 node-version: 20
-                cache: 'npm'
+                cache: 'npm' 
+                directory: ${{ inputs.service-path }}
 
             - name: debug path
               run: echo  ${{ inputs.service-path }}
