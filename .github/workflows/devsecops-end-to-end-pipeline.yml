@@ -1,0 +1,24 @@
+name: End to End DevSecOps Pipeline
+on:
+    push:
+        branches: [dev]
+    
+jobs:
+    check-code:
+        uses: ./.github/workflows/check-code-linter.yml
+
+    code-dependency:
+        uses: ./.github/workflows/code-dependency.yml
+     
+    code-quality:
+        uses: ./.github/workflows/code-quality.yml
+    
+    docker-file:
+        uses: ./.github/workflows/docker-file.yml
+
+    secrets:
+        uses: ./.github/workflows/secrets.yml   
+    
+    build-and-push:
+        uses: ./.github/workflows/build-and-push.yml
+            
