@@ -16,7 +16,7 @@ jobs:
             - name: Setup Node.Js
               uses: actions/setup-node@v6
               with:
-                node-version: '24' 
+                node-version: '22' 
 
             - name: Cache node_modules for service
               uses: actions/cache@v3

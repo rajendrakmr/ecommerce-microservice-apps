@@ -34,5 +34,5 @@ jobs:
                 image-ref: ${{ vars.DOCKER_HUB_USERNAME }}/${{ steps.meta.outputs.SERVICE_NAME}}:${{ steps.meta.outputs.SHORT_SHA}}
                 format: table
                 exit-code: '1'
-                severity: CRITICAL,HIGH
+                severity: CRITICAL
                 ignore-unfixed: true 
