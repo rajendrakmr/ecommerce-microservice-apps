@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         service-path:
-          # - backend/auth-service
+          - backend/auth-service
           # - backend/user-service
           # - backend/product-service
           # - backend/cart-service
