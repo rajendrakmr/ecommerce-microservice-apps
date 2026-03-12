@@ -4,7 +4,7 @@ on:
         branches: [dev]
     
 jobs: 
-  check-code:
+  check-code-lint:
     uses: ./.github/workflows/check-code-linter.yml
     strategy:
       matrix:
@@ -20,7 +20,7 @@ jobs:
       service-path: ${{ matrix.service-path }}
     secrets: inherit 
 
-  docker-file:
+  docker-file-scan:
       uses: ./.github/workflows/docker-file-scan.yml
       strategy:
         matrix:
@@ -34,9 +34,26 @@ jobs:
       with:
         service-path: ${{ matrix.service-path }}
       
-  docker:
+  docker-build-and-push:
       uses: ./.github/workflows/docker-and-push.yml
-      needs: [docker-file, check-code]
+      needs: [docker-file-scan, check-code-lint]
+      strategy:
+        matrix:
+          service-path:
+            - backend/auth-service
+            - backend/user-service
+            - backend/product-service
+            - backend/cart-service
+            - backend/order-service
+            - backend/api-gateway 
+      with:
+        service-path: ${{ matrix.service-path }}
+      secrets:
+        inherit
+      
+  trivy-image-scan:
+      uses: ./.github/workflows/trivy-scan.yml
+      needs: [docker-build-and-push]
       strategy:
         matrix:
           service-path:
