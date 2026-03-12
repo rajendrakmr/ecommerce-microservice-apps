@@ -1,5 +1,6 @@
 name: End to End DevSecOps Pipeline
 on:
+  workflow_dispatch:   # Fixed typo
   push:
     branches: [dev]
     
