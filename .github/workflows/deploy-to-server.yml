@@ -47,9 +47,9 @@ jobs:
                 username: ${{ secrets.EC2_SSH_USER }}
                 key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
                 script: | 
-                    export DOCKERHUB_USER=${{ vars.DOCKERHUB_USER }}
+                    export DOCKERHUB_USER=${{ vars.DOCKER_HUB_USERNAME }}
                     export DOCKER_TAG=${{ steps.meta.outputs.short_sha }}  # Use short SHA
-                    echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username $DOCKERHUB_USER --password-stdin
+                    echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username $DOCKERHUB_USER --password-stdin
                     cd ~/ecommerce
                     docker compose down
                     docker compose up -d --build --force-recreate --pull always
