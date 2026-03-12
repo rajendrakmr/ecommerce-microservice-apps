@@ -3,16 +3,22 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 
 const userRoutes = require("./routes/userRoutes")
+require("dotenv").config();
 
 const app = express()
 
-mongoose.connect("mongodb+srv://rajen:Ckjdz6k9ylnU85Bc@cluster0.qnsjbe8.mongodb.net/?appName=Cluster0")
+mongoose.connect(process.env.MONGO_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error('MongoDB connection error:', err));
 
 app.use(cors())
 app.use(express.json())
 
 app.use("/", userRoutes)
 
-app.listen(5002, () => {
-    console.log("User Service running")
+app.listen(process.env.PORT, () => {
+    console.log(`User Service running ${process.env.PORT}`)
 })

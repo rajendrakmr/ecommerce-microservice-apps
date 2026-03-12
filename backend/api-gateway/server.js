@@ -7,70 +7,49 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+const handleRequest = (fn) => async (req, res) => {
+    try {
+        const response = await fn(req);
+        res.json(response.data);
+    } catch (err) {
+        if (err.response) {
+            return res.status(err.response.status).json(err.response.data);
+        }
+        res.status(500).json({ message: "Server error" });
+    }
+};
 /** Auth service url end point */
-const authService = axios.create({ baseURL: process.env.AUTH_SERVICE_URL })
-app.post("/auth/register", async (req, res) => {
-    try {
-        const response = await authService.post("/register", req.body)
-        res.json(response.data)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-})
 
-app.post("/auth/login", async (req, res) => {
-    try {
-        const response = await authService.post("/login", req.body)
-        res.json(response.data)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-})
-/** End Auth service url end point */
-
+const authService = axios.create({ baseURL: process.env.AUTH_SERVICE_URL }); 
+app.post("/auth/register", handleRequest((req) => authService.post("/register", req.body)));
+app.post("/auth/login", handleRequest((req) => authService.post("/login", req.body)));
 
 /** User service url end point */
+
 const userService = axios.create({ baseURL: process.env.USER_SERVICE_URL })
-app.get("/users", async (req, res) => {
-    try {
-        const response = await userService.get("/users", req.body)
-        res.json(response.data)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-})
-
-
-/** END User service url end point */
-
-
+app.post("/users", handleRequest((req) => userService.post("/users", req.body)));
+ 
 
 /** User Products url end point */
-const userProducts = axios.create({ baseURL: process.env.PRODUCT_SERVICE_URL })
-app.get("/products", async (req, res) => {
-    try {
-        const response = await userProducts.get("/products", req.body)
-        res.json(response.data)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-})
 
-app.post("/products", async (req, res) => {
-    try {
-        const response = await userProducts.post("/products", req.body)
-        res.json(response.data)
-    } catch (err) {
-        res.status(500).json({ error: err.message })
-    }
-})
+const productService = axios.create({ baseURL: process.env.PRODUCT_SERVICE_URL })
+
+app.post("/products", handleRequest((req) => productService.post("/products", req.body)));
+app.get("/products", handleRequest((req) => productService.get("/products", req.body)));
 
 
-/** END User service url end point */
+const cartService = axios.create({ baseURL: process.env.CART_SERVICE_URL })
+
+app.post("/cart", handleRequest((req) => cartService.post("/cart", req.body)));
+app.get("/cart", handleRequest((req) => cartService.get("/cart", req.body)));
+app.delete("/cart-remove", handleRequest((req) => cartService.delete("/cart-remove", req.body)));
 
 
+const orderService = axios.create({ baseURL: process.env.ORDER_SERVICE_URL })
 
-
+app.post("/orders", handleRequest((req) => orderService.post("/orders", req.body)));
+app.get("/orders", handleRequest((req) => orderService.get("/orders", req.body)));
+  
 // BASE ENDPOINT
 app.get("/", (req, res) => {
     res.json({ message: "API Gateway Running" })
