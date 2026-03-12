@@ -13,7 +13,7 @@ const Order = lazy(() => import("./pages/Order"));
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/apps">
 
       <div style={{ minHeight: "100vh", background: "#FAFAFA", fontFamily: "system-ui, -apple-system, sans-serif" }}>
         <style>
