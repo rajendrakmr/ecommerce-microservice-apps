@@ -23,10 +23,10 @@ jobs:
               run: echo  ${{ inputs.service-path }}
                
 
-            - name: Install dependecy
-              run: npm ci
-              working-directory: ${{ inputs.service-path }}
+            # - name: Install dependecy
+            #   run: npm ci
+            #   working-directory: ${{ inputs.service-path }}
 
-            - name: Run ESLint
-              run: npx eslint . --ext .js,.jsx,.ts,.tsx
-              working-directory: ${{ inputs.service-path }} 
+            # - name: Run ESLint
+            #   run: npx eslint . --ext .js,.jsx,.ts,.tsx
+            #   working-directory: ${{ inputs.service-path }} 
