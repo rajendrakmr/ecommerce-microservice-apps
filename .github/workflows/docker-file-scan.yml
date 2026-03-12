@@ -1,12 +1,21 @@
-name: Docker file scan
+name: Dockerfile scan
 
 on:
     workflow_call:
-    
+        inputs:
+            service-path:
+                required: true
+                type: string
+
 jobs:
-    scan:
+    validate:
         runs-on: ubuntu-latest
         steps:
             - name: code checkout
-              uses: actions/checkout@v4 
-              
+              uses: actions/checkout@v4
+
+            - name: Dockerfile validate
+              uses: hadolint/hadolint-action@v3.1.0
+              with:
+                  dockerfile: Dockerfile-slim
+                  context: ${{ github.workspace }}/${{ inputs.service-path }}
