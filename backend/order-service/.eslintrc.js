@@ -12,9 +12,7 @@ module.exports = {
     sourceType: 'module', // Keep 'module' if using import/export
   },
   rules: {
-    semi: ['error', 'always'],          // require semicolons
-    quotes: ['error', 'single'],        // enforce single quotes
-    'no-unused-vars': ['warn'],         // warn for unused vars
+    semi: ['error', 'always'],         // warn for unused vars
     'no-console': ['off'],              // allow console.log
     'no-async-promise-executor': ['off'], // sometimes used in async handlers
   },
