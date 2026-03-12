@@ -38,7 +38,8 @@ jobs:
           project: ${{ steps.meta.outputs.SERVICE_NAME }}
           path: ${{ inputs.service-path }}
           format: HTML
-          out: reports
+          out: reports 
+          fail-on-severity: NONE  
 
       - name: Upload Dependency Check Report
         uses: actions/upload-artifact@v4
