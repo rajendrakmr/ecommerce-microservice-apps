@@ -1,37 +1,100 @@
-const User = require("../models/User")
-const bcrypt = require("bcryptjs")
-const jwt = require("jsonwebtoken")
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
+
+// REGISTER
 exports.register = async (req, res) => {
 
-    const { name, email, password } = req.body
+  try {
 
-    const hashed = await bcrypt.hash(password, 10)
+    const { name, email, password } = req.body; 
+    const errors = {}; 
+    if (!name || name.trim() === "") { errors.name = "Name is required"; } 
+    if (!email) { errors.email = "Email is required"; } 
+    if (!password) { errors.password = "Password is required"; } 
+    if (password && password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(422).json({ errors });
+    } 
+    const existUser = await User.findOne({ email }); 
+    if (existUser) {
+      return res.status(422).json({
+        errors: { email: "Email already exists" }
+      });
+    } 
+    const hashed = await bcrypt.hash(password, 10);
 
     const user = new User({
-        name,
-        email,
-        password: hashed
-    })
+      name,
+      email,
+      password: hashed
+    }); 
+    await user.save(); 
+    res.json({
+      message: "User registered successfully"
+    });
 
-    await user.save()
+  } catch (err) {  
+    res.status(500).json({
+      message: "Server error"
+    });
 
-    res.json({ message: "User registered" })
-}
+  }
+};
 
+
+
+// LOGIN
 exports.login = async (req, res) => {
 
-    const { email, password } = req.body
+  try { 
+    const { email, password } = req.body; 
+    const errors = {}; 
+    if (!email) { errors.email = "Email is required";}
 
-    const user = await User.findOne({ email })
+    if (!password) {errors.password = "Password is required"; }
 
-    if (!user) return res.status(404).json({ msg: "User not found" })
+    if (Object.keys(errors).length > 0) {
+      return res.status(422).json({ errors });
+    } 
+    const user = await User.findOne({ email });
 
-    const match = await bcrypt.compare(password, user.password)
+    if (!user) {
+      return res.status(422).json({
+        errors: { email: "User not found" }
+      });
+    }
 
-    if (!match) return res.status(401).json({ msg: "Invalid password" })
+    const match = await bcrypt.compare(password, user.password);
 
-    const token = jwt.sign({ id: user._id }, "secret")
+    if (!match) {
+      return res.status(422).json({
+        errors: { password: "Invalid password" }
+      });
+    }
 
-    res.json({ token })
-}
+    const token = jwt.sign(
+      { id: user._id },
+      "secret",
+      { expiresIn: "7d" }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
+
+  } catch (err) {  
+    res.status(500).json({
+      message: "Server error"
+    }); 
+  }
+};
