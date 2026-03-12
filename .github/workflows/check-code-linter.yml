@@ -1,6 +1,10 @@
-name: Check Linter
+name: Check Lint
 on:
     workflow_call:
+        inputs:
+            service-path:
+                required: true
+                type: string
 
 jobs:
     linter:
@@ -8,3 +12,17 @@ jobs:
         steps:
             - name: checkout code
               uses: actions/checkout@v4
+        
+            - name: Setup Node.Js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: 'npm'
+
+            - name: Install dependecy
+              run: npm ci
+              working-directory: ${{ inputs.service-path }}
+
+            - name: Run ESLint
+              run: npx eslint . --ext .js,.jsx,.ts,.tsx
+              working-directory: ${{ inputs.service-path }} 
