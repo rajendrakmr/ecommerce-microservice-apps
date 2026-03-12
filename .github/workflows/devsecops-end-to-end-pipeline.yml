@@ -7,6 +7,17 @@ jobs:
     
     check-code:
         uses: ./.github/workflows/check-code-linter.yml
+        strategy:
+            matrix:
+                service-path:
+                    - backend/auth-service
+                    - backend/user-service
+                    - backend/product-service
+                    - backend/cart-service
+                    - backend/order-service
+                    - backend/api-gateway 
+        with:
+            path: ./${{ matrix.service-path }}
 
     code-dependency:
         uses: ./.github/workflows/code-dependency.yml
