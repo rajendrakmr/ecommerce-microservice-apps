@@ -1,0 +1,10 @@
+name: Check Linter
+on:
+    workflow_call:
+
+jobs:
+    linter:
+        runs-on: ubuntu-latest
+        steps:
+            - name: checkout code
+              uses: actions/checkout@v4
