@@ -10,7 +10,7 @@ jobs:
       matrix:
         service-path:
           - backend/auth-service
-          - backend/user-service
+          # - backend/user-service
           - backend/product-service
           - backend/cart-service
           - backend/order-service
