@@ -16,8 +16,7 @@ jobs:
             - name: Setup Node.Js
               uses: actions/setup-node@v6
               with:
-                node-version: '24'
-                cache: 'npm'  
+                node-version: '24' 
 
             - name: debug path
               run: echo  ${{ inputs.service-path }}
