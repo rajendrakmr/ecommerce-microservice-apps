@@ -10,7 +10,7 @@ RUN npm ci --omit=dev
 COPY . .
 
 # Stage 2: Runtime
-FROM gcr.io/distroless/nodejs24-debian13
+FROM gcr.io/distroless/nodejs24-debian13:nonroot
 
 WORKDIR /app
 
