@@ -15,7 +15,6 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Dockerfile validate
-              uses: hadolint/hadolint-action@v3.1.0
+              uses: hadolint/hadolint-action@v3.3.0
               with:
-                  dockerfile: Dockerfile-slim
-                  context: ${{ github.workspace }}/${{ inputs.service-path }}
+                  dockerfile: ${{ inputs.service-path }}/Dockerfile-slim 
