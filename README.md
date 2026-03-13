@@ -82,6 +82,21 @@ ecommerce-microservice-apps/
 │   │   └── package.json
 │   │
 │   └── product-service/         # Product catalog management
+│   |   ├── src/
+│   |   │   ├── index.js
+│   |   │   ├── routes/
+│   |   │   └── models/
+│   |   ├── Dockerfile-slim
+│   |   └── package.json
+│   ├── order-service/            # Order history management
+│   │   ├── src/
+│   │   │   ├── index.js
+│   │   │   ├── routes/
+│   │   │   └── models/
+│   │   ├── Dockerfile-slim
+│   │   └── package.json
+│   │
+│   └── cart-service/         # Shopping cart management
 │       ├── src/
 │       │   ├── index.js
 │       │   ├── routes/
