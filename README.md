@@ -309,10 +309,10 @@ All client requests go through the **API Gateway** on port `5000`.
 ### Prerequisites
 
 - [Docker](https://www.docker.com/get-started) & Docker Compose
-- [Node.js](https://nodejs.org/) v18+ (for local dev without Docker)
+- [Node.js](https://nodejs.org/) v22+ (for local dev without Docker)
 - [Git](https://git-scm.com/)
 
-### 1. Clone the repository
+### 1. Clone the repository 
 
 ```bash
 git clone https://github.com/rajendrakmr/ecommerce-microservice-apps.git
@@ -335,7 +335,7 @@ npm install
 npm run dev
 ```
 
-The app will be available at **http://localhost:3000**.
+The app will be available at **http://localhost:5173**.
 
 ### 4. Verify services are running
 
@@ -362,6 +362,8 @@ PORT=5000
 AUTH_SERVICE_URL=http://auth-service:5001/auth
 USER_SERVICE_URL=http://user-service:5002
 PRODUCT_SERVICE_URL=http://product-service:5003
+CART_SERVICE_URL=http://cart-service:5004
+ORDER_SERVICE_URL=http://order-service:5005
 JWT_SECRET=your_jwt_secret_here
 ```
 
@@ -482,13 +484,13 @@ curl -X POST http://localhost:5000/products \
 
 ## 🔐 Authentication Flow
 
-```
+``` 
 Client                 API Gateway             Auth Service           MongoDB
   │                        │                        │                    │
   │── POST /auth/login ──► │                        │                    │
   │                        │── forward request ───► │                    │
   │                        │                        │── find user ─────► │
-  │                        │                        │◄─ user data ──────  │
+  │                        │                        │◄─ user data ────── │
   │                        │                        │── verify password   │
   │                        │◄── JWT token ─────────  │                    │
   │◄── JWT token ─────────  │                        │                    │
@@ -498,7 +500,22 @@ Client                 API Gateway             Auth Service           MongoDB
   │                        │◄── valid / invalid ───  │                    │
   │                        │── forward to user-svc   │                    │
   │◄── profile data ───────  │                        │                    │
-```
+  │                        │                        │                    │
+  │── GET /cart ──────────►│                        │                    │
+  │   Authorization: Bearer │── validate token ────► │                    │
+  │                        │◄── valid / invalid ───  │                    │
+  │                        │── forward to cart-svc   │                    │
+  │                        │                        │── fetch cart ──► │
+  │                        │                        │◄─ cart items ───── │
+  │◄── cart data ─────────  │                        │                    │
+  │                        │                        │                    │
+  │── POST /orders ───────►│                        │                    │
+  │   Authorization: Bearer │── validate token ────► │                    │
+  │                        │◄── valid / invalid ───  │                    │
+  │                        │── forward to order-svc  │                    │
+  │                        │                        │── create order ─► │
+  │                        │                        │◄─ order data ───── │
+  │◄── order confirmation ─ │                        │                    │
 
 All protected routes require the `Authorization: Bearer <token>` header. The API Gateway validates the token against the Auth Service before forwarding requests.
 
@@ -579,7 +596,7 @@ docker exec -it api-gateway sh
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18, Vite, Context API |
+| Frontend | React 19+, Vite, Context API |
 | API Gateway | Node.js, Express |
 | Auth Service | Node.js, Express, JWT, bcrypt |
 | User Service | Node.js, Express, Mongoose |
@@ -587,20 +604,6 @@ docker exec -it api-gateway sh
 | Database | MongoDB |
 | Containerization | Docker, Docker Compose |
 | Network | Custom Docker bridge network (`ecommerce-nt`) |
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Order service (`:5004`)
-- [ ] Payment service with Stripe integration
-- [ ] Notification service (email / SMS)
-- [ ] Redis caching layer
-- [ ] Rate limiting on API Gateway
-- [ ] Kubernetes deployment manifests
-- [ ] GitHub Actions CI/CD pipeline
-- [ ] Product image upload to AWS S3
-- [ ] Admin dashboard
 
 ---
 
@@ -614,10 +617,5 @@ docker exec -it api-gateway sh
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
 
 <p align="center">Built with ❤️ by <a href="https://github.com/rajendrakmr">rajendrakmr</a></p>
