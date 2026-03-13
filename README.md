@@ -490,31 +490,33 @@ Client                 API Gateway             Auth Service           MongoDB
   │                        │── forward request ───► │                    │
   │                        │                        │── find user ─────► │
   │                        │                        │◄─ user data ────── │
-  │                        │                        │── verify password   │
-  │                        │◄── JWT token ─────────  │                    │
-  │◄── JWT token ─────────  │                        │                    │
+  │                        │                        │── verify password  │
+  │                        │◄── JWT token ───────── │                    │
+  │◄── JWT token ───────── │                        │                    │
   │                        │                        │                    │
-  │── GET /users/profile ──►│                        │                    │
-  │   Authorization: Bearer │── validate token ────► │                    │
-  │                        │◄── valid / invalid ───  │                    │
-  │                        │── forward to user-svc   │                    │
-  │◄── profile data ───────  │                        │                    │
+  │── GET /users/profile──►│                        │                    │
+  │   Authorization: Bearer│── validate token ────► │                    │
+  │                        │◄── valid / invalid ─── │                    │
+  │                        │── forward to user-svc  │                    │
+  │◄── profile data ─────  │                        │                    │
   │                        │                        │                    │
   │── GET /cart ──────────►│                        │                    │
-  │   Authorization: Bearer │── validate token ────► │                    │
-  │                        │◄── valid / invalid ───  │                    │
-  │                        │── forward to cart-svc   │                    │
-  │                        │                        │── fetch cart ──► │
+  │  Authorization: Bearer │── validate token ────► │                    │
+  │                        │◄── valid / invalid ──  │                    │
+  │                        │── forward to cart-svc  │                    │
+  │                        │                        │── fetch cart ──►   │
   │                        │                        │◄─ cart items ───── │
-  │◄── cart data ─────────  │                        │                    │
+  │◄── cart data ────────  │                        │                    │
   │                        │                        │                    │
   │── POST /orders ───────►│                        │                    │
-  │   Authorization: Bearer │── validate token ────► │                    │
-  │                        │◄── valid / invalid ───  │                    │
-  │                        │── forward to order-svc  │                    │
-  │                        │                        │── create order ─► │
+  │   Authorization: Bearer│── validate token ────► │                    │
+  │                        │◄── valid / invalid ─── │                    │
+  │                        │── forward to order-svc │                    │
+  │                        │                        │── create order ─►  │
   │                        │                        │◄─ order data ───── │
-  │◄── order confirmation ─ │                        │                    │
+  │◄─ order confirmation ─ │                        │                    │
+
+
 ```
 All protected routes require the `Authorization: Bearer <token>` header. The API Gateway validates the token against the Auth Service before forwarding requests.
 
