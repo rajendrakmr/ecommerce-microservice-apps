@@ -113,11 +113,13 @@ ecommerce-microservice-apps/
 
 | Service | Port | Description |
 |---|---|---|
-| **Frontend** | `3000` | React + Vite SPA |
+| **Frontend** | `5173` | React + Vite SPA |
 | **API Gateway** | `5000` | Routes all client requests to microservices |
 | **Auth Service** | `5001` | User registration, login, JWT token management |
 | **User Service** | `5002` | User profile CRUD operations |
 | **Product Service** | `5003` | Product catalog, search, filtering |
+| **Cart Service** | `5004` | Manage shopping cart: add/remove items, view cart, calculate totals |
+| **Order Service** | `5005` | Handle orders: create, confirm, track, and process payments |
 | **MongoDB** | `27017` | Shared database (containerized) |
 
 ---
@@ -220,6 +222,83 @@ All client requests go through the **API Gateway** on port `5000`.
   "reviews": 1203,
   "images": ["https://cdn.example.com/product1.jpg"],
   "createdAt": "2025-01-15T10:00:00Z"
+}
+```
+
+
+ 
+### Cart Endpoints → `http://localhost:5004/cart`
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| `GET` | `/cart` | List all items in the user’s cart | ✅ User |
+| `GET` | `/cart/:id` | Get single cart item by ID | ✅ User |
+| `POST` | `/cart` | Add a new item to the cart | ✅ User |
+| `PUT` | `/cart/:id` | Update quantity of a cart item | ✅ User |
+| `DELETE` | `/cart/:id` | Remove an item from the cart | ✅ User |
+| `DELETE` | `/cart` | Clear all items from the cart | ✅ User |
+
+**Query parameters for `GET /cart`:**
+
+**Query parameters for `GET /products`:**
+```
+?page=1&limit=10
+?sort=addedAt-desc | addedAt-asc
+?productId=
+```
+
+ 
+**Cart item object example:**
+```json
+{
+  "_id": "64f3d2e4f5a6b7c8d9e0f1a2",
+  "productId": "64f1a2b3c4d5e6f7a8b9c0d2",
+  "name": "Wireless Earbuds Pro",
+  "price": 249,
+  "quantity": 2,
+  "total": 498,
+  "addedAt": "2026-03-13T12:00:00Z"
+}
+```
+
+
+### Order Endpoints → `http://localhost:5005/orders`
+
+| Method | Endpoint | Description | Auth Required |
+|---|---|---|---|
+| `GET` | `/orders` | List all orders for the user | ✅ User |
+| `GET` | `/orders/:id` | Get details of a single order | ✅ User |
+| `POST` | `/orders` | Create a new order from cart | ✅ User |
+| `PUT` | `/orders/:id/cancel` | Cancel an order | ✅ User |
+| `PUT` | `/orders/:id/status` | Update order status (admin only) | ✅ Admin |
+| `GET` | `/orders/search?q=` | Search orders by product or user | ✅ Admin |
+
+**Query parameters for `GET /orders`:**
+
+?page=1&limit=10
+?sort=createdAt-desc | createdAt-asc
+?status=Pending | Shipped | Delivered | Cancelled
+?userId=<user_id>```
+
+
+**Order object example:**
+```json
+{
+  "_id": "64f2c3d4e5f6a7b8c9d0e1f2",
+  "userId": "64f1b2c3d4e5f6a7b8c9d0e1",
+  "items": [
+    {
+      "productId": "64f1a2b3c4d5e6f7a8b9c0d2",
+      "name": "Wireless Earbuds Pro",
+      "price": 249,
+      "quantity": 2,
+      "total": 498
+    }
+  ],
+  "totalPrice": 498,
+  "status": "Pending",
+  "createdAt": "2026-03-13T12:30:00Z",
+  "updatedAt": "2026-03-13T12:30:00Z"
 }
 ```
 
