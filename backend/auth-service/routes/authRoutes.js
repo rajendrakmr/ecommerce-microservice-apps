@@ -1,7 +1,17 @@
 const router = require('express').Router();
-const auth = require('../controllers/authController');
+const authController = require('../controllers/authController');
+const { verifyToken, verifyAdmin } = require('../middleware/authMiddleware');
 
-router.post('/register', auth.register);
-router.post('/login', auth.login);
+// Public routes
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+router.post('/refresh', authController.refreshToken);
+
+// // Protected routes
+router.post('/logout', authController.logout);
+router.get('/me', authController.getMe);
+
+// // Example of admin-only route
+router.post('/admin-only', authController.adminAction);
 
 module.exports = router;
