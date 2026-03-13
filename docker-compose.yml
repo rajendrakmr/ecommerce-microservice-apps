@@ -14,12 +14,13 @@ services:
 
   auth-service:
     container_name: auth-service
+    image:  ${DOCKERHUB_USER}/backend-auth-service:${DOCKER_TAG}
     environment: 
       MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
       PORT: 5001
-    build:
-      context: ./backend/auth-service 
-      dockerfile: Dockerfile-slim
+    # build:
+    #   context: ./backend/auth-service 
+    #   dockerfile: Dockerfile-slim
     
     networks:
       - ecommerce-nt
@@ -29,12 +30,13 @@ services:
       - mongodb
   user-service:
     container_name: user-service
+    image:  ${DOCKERHUB_USER}/backend-user-service:${DOCKER_TAG}
     environment: 
       MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
       PORT: 5002
-    build:
-      context: ./backend/user-service 
-      dockerfile: Dockerfile-slim
+    # build:
+    #   context: ./backend/user-service 
+    #   dockerfile: Dockerfile-slim
     networks:
       - ecommerce-nt
     ports:
@@ -43,12 +45,13 @@ services:
        - mongodb
   product-service:
     container_name: product-service
+    image:  ${DOCKERHUB_USER}/backend-product-service:${DOCKER_TAG}
     environment: 
       MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
       PORT: 5003
-    build:
-      context: ./backend/product-service 
-      dockerfile: Dockerfile-slim
+    # build:
+    #   context: ./backend/product-service 
+    #   dockerfile: Dockerfile-slim
     networks:
       - ecommerce-nt
     ports:
@@ -57,9 +60,10 @@ services:
       - mongodb
   cart-service:
     container_name: cart-service
-    build:
-      context: ./backend/cart-service 
-      dockerfile: Dockerfile-slim
+    image:  ${DOCKERHUB_USER}/backend-cart-service:${DOCKER_TAG}
+    # build:
+    #   context: ./backend/cart-service 
+    #   dockerfile: Dockerfile-slim
     networks:
       - ecommerce-nt
     ports:
@@ -68,12 +72,13 @@ services:
       - mongodb
   order-service:
     container_name: order-service
+    image:  ${DOCKERHUB_USER}/backend-order-service:${DOCKER_TAG}
     environment: 
       MONGO_URI: mongodb://admin:admin123@mongodb:27017/ecommerce?authSource=admin
       PORT: 5005
-    build:
-      context: ./backend/order-service 
-      dockerfile: Dockerfile-slim
+    # build:
+    #   context: ./backend/order-service 
+    #   dockerfile: Dockerfile-slim
     networks:
       - ecommerce-nt
     ports:
@@ -83,9 +88,10 @@ services:
 
   api-gateway:
     container_name: api-gateway
-    build:
-      context: ./backend/api-gateway 
-      dockerfile: Dockerfile-slim
+    image:  ${DOCKERHUB_USER}/backend-product-service:${DOCKER_TAG}
+    # build:
+    #   context: ./backend/api-gateway 
+    #   dockerfile: Dockerfile-slim
     environment:
         AUTH_SERVICE_URL: http://auth-service:5001/auth
         USER_SERVICE_URL: http://user-service:5002/
@@ -104,6 +110,18 @@ services:
       - auth-service
       - order-service
       - cart-service
+  ecommerce-app:
+    container_name: ecommerce
+    image:  ${DOCKERHUB_USER}/frontend:${DOCKER_TAG}
+    # build:
+    #   context: ./frontend 
+    #   dockerfile: Dockerfile-slim 
+    networks:
+      - ecommerce-nt
+    ports:
+      - 5173:5173
+    depends_on:
+      - api-gateway
 networks:
   ecommerce-nt:
     driver: bridge

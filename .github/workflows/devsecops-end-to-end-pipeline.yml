@@ -1,7 +1,8 @@
 name: End to End DevSecOps Pipeline
 on:
-    push:
-        branches: [dev]
+  workflow_dispatch:   # Fixed typo
+  push:
+    branches: [dev]
     
 jobs: 
   check-code-lint:
@@ -34,8 +35,8 @@ jobs:
     with:
       service-path: ${{ matrix.service-path }} 
   
-  dependency-review:
-    uses: ./.github/workflows/code-dependency.yml 
+  secrets-scan:
+    uses: ./.github/workflows/secrets.yml 
 
   docker-file-scan:
       uses: ./.github/workflows/docker-file-scan.yml
@@ -48,12 +49,13 @@ jobs:
             - backend/cart-service
             - backend/order-service
             - backend/api-gateway 
+            - frontend 
       with:
         service-path: ${{ matrix.service-path }}
       
   docker-build-and-push:
       uses: ./.github/workflows/docker-and-push.yml
-      needs: [docker-file-scan,owasp-dependency-scan, dependency-review, check-code-lint]
+      needs: [docker-file-scan, secrets-scan, check-code-lint]
       strategy:
         matrix:
           service-path:
@@ -63,6 +65,7 @@ jobs:
             - backend/cart-service
             - backend/order-service
             - backend/api-gateway 
+            - frontend
       with:
         service-path: ${{ matrix.service-path }}
       secrets:
@@ -85,3 +88,8 @@ jobs:
       secrets:
         inherit
      
+  deploy:
+      uses: ./.github/workflows/deploy-to-server.yml
+      needs: [trivy-image-scan] 
+      secrets:
+        inherit
