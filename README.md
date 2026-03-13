@@ -38,7 +38,7 @@ A full-stack e-commerce platform built with a **microservice architecture**, fea
               │   MongoDB     │
               │   :27017      │
               └───────────────┘
-
+```
 ---
 
 ## 📦 Project Structure
