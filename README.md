@@ -515,7 +515,7 @@ Client                 API Gateway             Auth Service           MongoDB
   │                        │                        │── create order ─► │
   │                        │                        │◄─ order data ───── │
   │◄── order confirmation ─ │                        │                    │
-
+```
 All protected routes require the `Authorization: Bearer <token>` header. The API Gateway validates the token against the Auth Service before forwarding requests.
 
 ---
